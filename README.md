@@ -1,4 +1,4 @@
 console.js
 ==========
 
-JavaScript console that sends log to a remote server
+JavaScript console that sends logs to a remote server
