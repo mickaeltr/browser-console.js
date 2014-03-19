@@ -2,7 +2,6 @@ module.exports = function (grunt) {
     "use strict";
 
     var source = "lib/console.js",
-        tests = "tests/*.js",
         dependencies,
         dependency,
         config = {};
@@ -48,18 +47,8 @@ module.exports = function (grunt) {
         }
     };
 
-    // Watch
-
-    config.watch = {
-        jasmine: {
-            files: [source, tests],
-            tasks: "jasmine:zepto:build"
-        }
-    };
-
     grunt.initConfig(config);
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks("grunt-contrib-jasmine");
     grunt.loadNpmTasks("grunt-contrib-uglify");
-    grunt.loadNpmTasks('grunt-contrib-watch');
 };
