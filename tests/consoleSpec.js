@@ -1,0 +1,600 @@
+describe("console.js", function () {
+
+    var config, console = window.console;
+
+    beforeEach(function () {
+        console.log = function() {};
+        console.info = function() {};
+        console.warn = function() {};
+        console.error = function() {};
+        config = {serverUrl: "/logs"};
+    });
+
+    afterEach(function () {
+        console.restore();
+    });
+
+    it("extends the window.console object", function () {
+        expect(console).toBeDefined();
+        expect(console.init).toBeDefined();
+    });
+
+    describe("checkDependencies", function () {
+
+        var expectedErrorMessage = "Missing dependency: $ (jQuery or Zepto)";
+
+        it("is chainable", function () {
+            // When
+            var returns = console.checkDependencies();
+
+            // Then
+            expect(returns).toBe(console);
+        });
+
+        it("throws an error if the $ dependency is missing", function () {
+            // Given
+            var $ = window.$, error;
+            delete window.$;
+
+            // When
+            try {
+                console.checkDependencies();
+            } catch (e) {
+                error = e;
+            }
+
+            // Then
+            expect(error).toEqual(expectedErrorMessage);
+            window.$ = $;
+        });
+
+        it("throws an error if a function is missing in the $ dependency", function () {
+            // Given
+            var $ajax = window.$.ajax, error;
+            delete window.$.ajax;
+
+            // When
+            try {
+                console.checkDependencies();
+            } catch (e) {
+                error = e;
+            }
+
+            // Then
+            expect(error).toEqual(expectedErrorMessage);
+            window.$.ajax = $ajax;
+        });
+    });
+
+    describe("readConfig", function () {
+
+        it("is chainable", function () {
+            // When
+            var returns = console.readConfig(config);
+
+            // Then
+            expect(returns).toBe(console);
+        });
+
+        describe("levels", function () {
+
+            it("sets a default value when invalid or not specified", function () {
+                var defaultValue = ["info", "warn", "error"];
+
+                expect(console.readConfig(config).config.levels).toEqual(defaultValue);
+
+                config.levels = "invalid";
+                expect(console.readConfig(config).config.levels).toEqual(defaultValue);
+
+                config.levels = [];
+                expect(console.readConfig(config).config.levels).toEqual(defaultValue);
+
+                config.levels = ["", "  "];
+                expect(console.readConfig(config).config.levels).toEqual(defaultValue);
+            });
+
+            it("cleans up given values", function () {
+                config.levels = [" ", "error  ", 123];
+                expect(console.readConfig(config).config.levels).toEqual(["error", "123"]);
+            });
+
+        });
+
+        describe("levelEnabledOnServer", function () {
+
+            it("sets a default value when invalid or not specified", function () {
+                expect(console.readConfig(config).config.levelEnabledOnServer).toEqual("info");
+
+                config.levelEnabledOnServer = "invalid";
+                expect(console.readConfig(config).config.levelEnabledOnServer).toEqual("info");
+            });
+
+            it("cleans up given values", function () {
+                config.levelEnabledOnServer = " warn ";
+                expect(console.readConfig(config).config.levelEnabledOnServer).toEqual("warn");
+            });
+
+        });
+
+        describe("levelForConsoleLog", function () {
+
+            it("sets a default value when invalid or not specified", function () {
+                expect(console.readConfig(config).config.levelForConsoleLog).toEqual("info");
+
+                config.levelForConsoleLog = "invalid";
+                expect(console.readConfig(config).config.levelForConsoleLog).toEqual("info");
+            });
+
+            it("cleans up given values", function () {
+                config.levelForConsoleLog = " warn ";
+                expect(console.readConfig(config).config.levelForConsoleLog).toEqual("warn");
+            });
+
+        });
+
+        describe("levelForGlobalErrors", function () {
+
+            it("sets a default value when invalid or not specified", function () {
+                expect(console.readConfig(config).config.levelForGlobalErrors).toEqual("error");
+
+                config.levelForGlobalErrors = "invalid";
+                expect(console.readConfig(config).config.levelForGlobalErrors).toEqual("error");
+            });
+
+            it("cleans up given values", function () {
+                config.levelForGlobalErrors = " warn ";
+                expect(console.readConfig(config).config.levelForGlobalErrors).toEqual("warn");
+            });
+
+        });
+
+        describe("serverUrl", function () {
+
+            it("writes a log when invalid or not specified", function () {
+                // Given
+                config.serverUrl = "  ";
+                spyOn(console, "log");
+
+                // When
+                console.readConfig(config);
+
+                // Then
+                expect(console.config.serverUrl).toBeFalsy();
+                expect(console.log).toHaveBeenCalledWith("No server URL specified (serverUrl)");
+            });
+
+            it("cleans up given values", function () {
+                config.serverUrl = " /logs ";
+                expect(console.readConfig(config).config.serverUrl).toEqual("/logs");
+            });
+
+        });
+
+        describe("disableOnErrorHandler", function () {
+
+            it("sets a default value when not specified", function () {
+                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(false);
+
+                config.disableOnErrorHandler = "invalid";
+                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(false);
+            });
+
+            it("cleans up given values", function () {
+                config.disableOnErrorHandler = " true ";
+                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(true);
+
+                config.disableOnErrorHandler = " false ";
+                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(false);
+            });
+
+        });
+
+    });
+
+    describe("createOrOverrideLogFunctions", function () {
+
+        it("is chainable", function () {
+            // When
+            var returns = console.readConfig(config)
+                .createOrOverrideLogFunctions();
+
+            // Then
+            expect(returns).toBe(console);
+        });
+
+        it("creates a console.log function when it does not exist", function () {
+            // Given
+            var consoleLog = console.log;
+            delete console.log;
+
+            // When
+            console.readConfig(config)
+                .createOrOverrideLogFunctions();
+
+            // Then
+            expect(console.original.log).toBeDefined();
+            expect(console.original.log).not.toBe(consoleLog);
+            expect(console.log).toBeDefined();
+            expect(console.log).not.toBe(console.original.log);
+            console.log = consoleLog;
+        });
+
+        it("saves original functions", function () {
+            // Given
+            delete console.fatal;
+            var originalConsoleLog = console.log,
+                originalConsoleError = console.error;
+            config.levels = ["log", "error", "fatal"];
+
+            // When
+            console.readConfig(config)
+                .createOrOverrideLogFunctions();
+
+            // Then
+            expect(console.original.log).toBe(originalConsoleLog);
+            expect(console.original.error).toBe(originalConsoleError);
+            expect(console.original.fatal).toBeUndefined();
+        });
+
+        it("creates functions for each level", function () {
+            // Given
+            config.levels = ["level1", "level2"];
+
+            // When
+            console.readConfig(config)
+                .createOrOverrideLogFunctions();
+
+            // Then
+            expect(console.level1).toBeDefined();
+            expect(console.level2).toBeDefined();
+            expect(console.level1).not.toBe(console.level2);
+        });
+
+        it("creates a function for log level, even when not specified", function () {
+            // When
+            console.readConfig(config)
+                .createOrOverrideLogFunctions();
+
+            // Then
+            expect(console.log).toBe(console[console.config.levelForConsoleLog]);
+        });
+
+        describe("new functions", function () {
+
+            it("call and return the result of the original function", function () {
+                // Given
+                spyOn(console, "error").and.returnValue("returns");
+                console.readConfig(config)
+                    .createOrOverrideLogFunctions();
+
+                // When
+                var returns = console.error("Message", "[1]");
+
+                // Then
+                expect(returns).toEqual("returns");
+                expect(console.original.error).toHaveBeenCalledWith("Message, [1]");
+            });
+
+            it("call the 'send' function", function () {
+                // Given
+                console.readConfig(config)
+                    .createOrOverrideLogFunctions();
+                spyOn(console, "send").and.stub();
+
+                // When
+                console.error("Message", "[2]");
+
+                // Then
+                expect(console.send).toHaveBeenCalledWith("error", "Message, [2]");
+            });
+
+            it("do not break on error", function () {
+                // Given
+                console.readConfig(config)
+                    .createOrOverrideLogFunctions();
+                spyOn(console.original, "error").and.throwError("error");
+
+                // When
+                console.error("Message");
+            });
+
+        });
+    });
+
+    describe("handleGlobalErrorsLogging", function () {
+
+        it("is chainable", function () {
+            // When
+            var returns = console
+                .readConfig(config)
+                .handleGlobalErrorsLogging();
+
+            // Then
+            expect(returns).toBe(console);
+        });
+
+        it("replaces and writes a log when there is already a handler", function () {
+            // Given
+            var originalOnErrorHandler = function () {
+            };
+            window.onerror = originalOnErrorHandler;
+            spyOn(console, "log").and.stub();
+
+            // When
+            console.readConfig(config)
+                .handleGlobalErrorsLogging();
+
+            // Then
+            expect(window.onerror).toBeDefined();
+            expect(window.onerror).not.toBe(originalOnErrorHandler);
+            expect(console.log).toHaveBeenCalledWith("window.onerror will be overriden; you can prevent this by setting 'disableOnErrorHandler' to true");
+        });
+
+        it("creates a 'window.onerror' handler", function () {
+            // When
+            console.readConfig(config)
+                .handleGlobalErrorsLogging();
+
+            // Then
+            expect(window.onerror).toBeDefined();
+            expect(window.onerror).toBe(console.onError);
+        });
+
+        it("does not create a 'window.onerror' handler when 'disableOnErrorHandler' is truthy", function () {
+            // Given
+            console.readConfig(config)
+                .handleGlobalErrorsLogging();
+            config.disableOnErrorHandler = true;
+
+            // When
+            console.readConfig(config)
+                .handleGlobalErrorsLogging();
+
+            // Then
+            expect(window.onerror).toBeNull();
+            expect(console.onError).toBeUndefined();
+        });
+
+        it("preserves the existing 'window.onerror' handler when 'disableOnErrorHandler' is truthy", function () {
+            // Given
+            var originalOnErrorHandler = function () {
+            };
+            window.onerror = originalOnErrorHandler;
+            config.disableOnErrorHandler = true;
+
+            // When
+            console.readConfig(config)
+                .handleGlobalErrorsLogging();
+
+            // Then
+            expect(window.onerror).toBe(originalOnErrorHandler);
+            expect(console.onError).toBeUndefined();
+            window.onerror = null;
+        });
+
+    });
+
+    describe("send", function () {
+
+        it("is chainable", function () {
+            // When
+            var returns = console
+                .readConfig(config)
+                .send();
+
+            // Then
+            expect(returns).toBe(console);
+        });
+
+        it("does not send if 'serverUrl' is not specified", function () {
+            // Given
+            spyOn(window.$, "ajax");
+            delete config.serverUrl;
+
+            // When
+            console.readConfig(config)
+                .send("info", "message");
+
+            // Then
+            expect(window.$.ajax).not.toHaveBeenCalled();
+        });
+
+        it("does not send if there is no message", function () {
+            // Given
+            spyOn(window.$, "ajax");
+
+            // When
+            console.readConfig(config)
+                .send("info", "");
+
+            // Then
+            expect(window.$.ajax).not.toHaveBeenCalled();
+        });
+
+        it("does not send if the level is lower than the 'levelEnabledOnServer'", function () {
+            // Given
+            spyOn(window.$, "ajax");
+            config.levelEnabledOnServer = "warn";
+
+            // When
+            console.readConfig(config)
+                .send("info", "message");
+
+            // Then
+            expect(window.$.ajax).not.toHaveBeenCalled();
+        });
+
+        it("sends the log to the server if the level is equal to the 'levelEnabledOnServer'", function () {
+            // Given
+            spyOn(window.$, "ajax");
+            config.levelEnabledOnServer = "warn";
+
+            // When
+            console.readConfig(config)
+                .send("warn", "messageWarn");
+
+            // Then
+            expect(window.$.ajax).toHaveBeenCalledWith({
+                type: "POST",
+                url: config.serverUrl,
+                data: '{"level":"warn","message":"[' + window.location + '] messageWarn"}',
+                contentType: "application/json",
+                global: false
+            });
+        });
+
+        it("sends the log to the server if the level is greater than the 'levelEnabledOnServer'", function () {
+            // Given
+            spyOn(window.$, "ajax");
+            config.levelEnabledOnServer = "warn";
+
+            // When
+            console.readConfig(config)
+                .send("error", "messageError");
+
+            // Then
+            expect(window.$.ajax).toHaveBeenCalledWith({
+                type: "POST",
+                url: config.serverUrl,
+                data: '{"level":"error","message":"[' + window.location + '] messageError"}',
+                contentType: "application/json",
+                global: false
+            });
+        });
+
+    });
+
+    describe("init", function () {
+
+        it("is chainable", function () {
+            // When
+            var returns = console.init(config);
+
+            // Then
+            expect(returns).toBe(console);
+        });
+
+        it("first restores the original console", function () {
+            // Given
+            spyOn(console, "restore").and.callThrough();
+
+            // When
+            console.init(config);
+
+            // Then
+            expect(console.restore).toHaveBeenCalled();
+        });
+
+        it("checks the dependencies", function () {
+            // Given
+            spyOn(console, "checkDependencies").and.callThrough();
+
+            // When
+            console.init(config);
+
+            // Then
+            expect(console.checkDependencies).toHaveBeenCalled();
+        });
+
+        it("reads the given configuration", function () {
+            // Given
+            spyOn(console, "readConfig").and.callThrough();
+
+            // When
+            console.init(config);
+
+            // Then
+            expect(console.readConfig).toHaveBeenCalledWith(config);
+        });
+
+        it("creates or overrides log functions", function () {
+            // Given
+            spyOn(console, "createOrOverrideLogFunctions").and.callThrough();
+
+            // When
+            console.init(config);
+
+            // Then
+            expect(console.createOrOverrideLogFunctions).toHaveBeenCalled();
+        });
+
+        it("handles global errors logging", function () {
+            // Given
+            spyOn(console, "handleGlobalErrorsLogging").and.callThrough();
+
+            // When
+            console.init(config);
+
+            // Then
+            expect(console.handleGlobalErrorsLogging).toHaveBeenCalled();
+        });
+
+    });
+
+    describe("restore", function () {
+
+        it("is chainable", function () {
+            // When
+            var returns = console.restore();
+
+            // Then
+            expect(returns).toBe(console);
+        });
+
+        it("disables the global errors handling", function () {
+            // Given
+            console.readConfig(config)
+                .handleGlobalErrorsLogging();
+            spyOn(console, "handleGlobalErrorsLogging").and.callFake(function () {
+                expect(console.config.disableOnErrorHandler).toBe(true);
+            });
+
+            // When
+            console.restore();
+
+            // Then
+            expect(console.handleGlobalErrorsLogging).toHaveBeenCalled();
+        });
+
+        it("restores original log functions", function () {
+            // Given
+            var originalConsoleLog = console.log,
+                originalConsoleInfo = console.info,
+                originalConsoleWarn = console.warn,
+                originalConsoleError = console.error;
+
+            console.readConfig(config)
+                .createOrOverrideLogFunctions();
+
+            // When
+            console.restore();
+
+            // Then
+            expect(console.original).toBeUndefined();
+            expect(console.log).toBe(originalConsoleLog);
+            expect(console.info).toBe(originalConsoleInfo);
+            expect(console.warn).toBe(originalConsoleWarn);
+            expect(console.error).toBe(originalConsoleError);
+        });
+
+        it("cleans up the configuration", function () {
+            // Given
+            console.readConfig(config);
+
+            // When
+            console.restore();
+
+            // Then
+            expect(console.config).toBe(undefined);
+        });
+
+        it("keeps functions needed for re-initiating the console", function () {
+            // When
+            console.restore();
+
+            // Then
+            expect(console.init).toBeDefined();
+        });
+
+    });
+});
