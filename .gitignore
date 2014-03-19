@@ -1,3 +1,5 @@
 .idea
 *.iml
+
+.grunt
 node_modules
