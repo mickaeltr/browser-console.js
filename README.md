@@ -74,6 +74,6 @@ This will be sent (POST) to the server URL:
 
 ## About
 
-License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+[Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 This project was inspired by [RESTHub](http://resthub.org/)'s [console.js](https://github.com/resthub/resthub-backbone-stack/blob/master/js/lib/resthub/console.js).
