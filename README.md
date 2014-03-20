@@ -12,15 +12,19 @@ You need to know what is happening on your client-side applications too.
 
 First insert [jQuery](http://jquery.com/) (or [Zepto](http://zeptojs.com/)):
 
-```<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>```
+```html
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+```
 
 Then insert [console.js](https://github.com/mickaeltr/console.js):
 
-```<script src="lib/console.js"></script>```
+```html
+<script src="lib/console.js"></script>
+```
 
 Finally initialize the console and play with it!
 
-```
+```html
 <script>
     console.init({serverUrl: "/logs"});
     console.warn("Writes a warning log in the JS console and sends it to the server");
@@ -29,10 +33,10 @@ Finally initialize the console and play with it!
 
 This will be sent (POST) to the server URL:
 
-```
+```json
 {
     "level": "warn",
-    "message": "[url] Writes a warning log in the JS console and sends it to the server"
+    "message": "[<window.location>] Writes a warning log in the JS console and sends it to the server"
 }
 ```
 
