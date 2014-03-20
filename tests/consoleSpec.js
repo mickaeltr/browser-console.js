@@ -175,21 +175,21 @@ describe("console.js", function () {
 
         });
 
-        describe("disableOnErrorHandler", function () {
+        describe("disableGlobalErrorsLogging", function () {
 
             it("sets a default value when not specified", function () {
-                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(false);
+                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(false);
 
-                config.disableOnErrorHandler = "invalid";
-                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(false);
+                config.disableGlobalErrorsLogging = "invalid";
+                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(false);
             });
 
             it("cleans up given values", function () {
-                config.disableOnErrorHandler = " true ";
-                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(true);
+                config.disableGlobalErrorsLogging = " true ";
+                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(true);
 
-                config.disableOnErrorHandler = " false ";
-                expect(console.readConfig(config).config.disableOnErrorHandler).toEqual(false);
+                config.disableGlobalErrorsLogging = " false ";
+                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(false);
             });
 
         });
@@ -332,7 +332,7 @@ describe("console.js", function () {
             // Then
             expect(window.onerror).toBeDefined();
             expect(window.onerror).not.toBe(originalOnErrorHandler);
-            expect(console.log).toHaveBeenCalledWith("window.onerror will be overriden; you can prevent this by setting 'disableOnErrorHandler' to true");
+            expect(console.log).toHaveBeenCalledWith("window.onerror will be overriden; you can prevent this by setting 'disableGlobalErrorsLogging' to true");
         });
 
         it("creates a 'window.onerror' handler", function () {
@@ -345,11 +345,11 @@ describe("console.js", function () {
             expect(window.onerror).toBe(console.onError);
         });
 
-        it("does not create a 'window.onerror' handler when 'disableOnErrorHandler' is truthy", function () {
+        it("does not create a 'window.onerror' handler when 'disableGlobalErrorsLogging' is truthy", function () {
             // Given
             console.readConfig(config)
                 .handleGlobalErrorsLogging();
-            config.disableOnErrorHandler = true;
+            config.disableGlobalErrorsLogging = true;
 
             // When
             console.readConfig(config)
@@ -360,12 +360,12 @@ describe("console.js", function () {
             expect(console.onError).toBeUndefined();
         });
 
-        it("preserves the existing 'window.onerror' handler when 'disableOnErrorHandler' is truthy", function () {
+        it("preserves the existing 'window.onerror' handler when 'disableGlobalErrorsLogging' is truthy", function () {
             // Given
             var originalOnErrorHandler = function () {
             };
             window.onerror = originalOnErrorHandler;
-            config.disableOnErrorHandler = true;
+            config.disableGlobalErrorsLogging = true;
 
             // When
             console.readConfig(config)
@@ -551,7 +551,7 @@ describe("console.js", function () {
             console.readConfig(config)
                 .handleGlobalErrorsLogging();
             spyOn(console, "handleGlobalErrorsLogging").and.callFake(function () {
-                expect(console.config.disableOnErrorHandler).toBe(true);
+                expect(console.config.disableGlobalErrorsLogging).toBe(true);
             });
 
             // When
