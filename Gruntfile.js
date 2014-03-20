@@ -49,9 +49,24 @@ module.exports = function (grunt) {
             files: [source, tests],
             options: {
                 livereload: true
-            }
+            },
+            tasks: ["jasmine"]
         }
     };
+    for (dependency in dependencies) {
+        if (dependencies.hasOwnProperty(dependency)) {
+            config.watch["jasmine-" + dependency] = {
+                files: [source, tests],
+                tasks: ["jasmine:" + dependency]
+            };
+            config.watch["jasmine-" + dependency + "-build"] = {
+                files: [source, tests],
+                options: {
+                    livereload: true
+                }
+            };
+        }
+    }
 
     grunt.initConfig(config);
     grunt.loadNpmTasks("grunt-contrib-clean");
