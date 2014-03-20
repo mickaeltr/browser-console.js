@@ -2,6 +2,7 @@ module.exports = function (grunt) {
     "use strict";
 
     var source = "lib/console.js",
+        tests = "tests/*.js",
         dependencies,
         dependency,
         config = {};
@@ -21,7 +22,7 @@ module.exports = function (grunt) {
             config.jasmine[dependency] = {
                 options: {
                     outfile: ".grunt/_SpecRunner.html",
-                    specs: "tests/*.js",
+                    specs: tests,
                     vendor: dependencies[dependency]
                 },
                 src: source
@@ -42,8 +43,19 @@ module.exports = function (grunt) {
         }
     };
 
+    // Watch
+    config.watch = {
+        jasmine: {
+            files: [source, tests],
+            options: {
+                livereload: true
+            }
+        }
+    };
+
     grunt.initConfig(config);
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-jasmine");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-watch");
 };
