@@ -72,6 +72,8 @@ This will be sent (POST) to the server URL:
 * Default value: `false`
 * Description: flag for disabling the logging of global JavaScript errors (`window.onerror`)
 
-## Credits
+## About
+
+License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 This project was inspired by [RESTHub](http://resthub.org/)'s [console.js](https://github.com/resthub/resthub-backbone-stack/blob/master/js/lib/resthub/console.js).
