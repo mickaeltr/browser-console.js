@@ -345,6 +345,19 @@ describe("console.js", function () {
             expect(window.onerror).toBe(console.onError);
         });
 
+        it("'window.onerror' handler sends error details to the server", function () {
+            // Given
+            spyOn(console, "send");
+            console.readConfig(config)
+                .handleGlobalErrorsLogging();
+
+            // When
+            window.onerror("message", "fileName", "lineNumber", "columnNumber", "error");
+
+            // Then
+            expect(console.send).toHaveBeenCalledWith("error", "'message' fileName:lineNumber:columnNumber error");
+        });
+
         it("does not create a 'window.onerror' handler when 'disableGlobalErrorsLogging' is truthy", function () {
             // Given
             console.readConfig(config)
