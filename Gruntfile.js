@@ -3,7 +3,11 @@ module.exports = function (grunt) {
 
     var source = "lib/console.js",
         tests = "tests/*.js",
-        dependencies,
+        dependencies = {
+            jquery1: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js",
+            jquery2: "http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js",
+            zepto: "http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.js"
+        },
         dependency,
         config = {};
 
@@ -12,11 +16,6 @@ module.exports = function (grunt) {
 
     // Jasmine (tests)
     config.jasmine = {};
-    dependencies = {
-        jquery1: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js",
-        jquery2: "http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js",
-        zepto: "http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.js"
-    };
     for (dependency in dependencies) {
         if (dependencies.hasOwnProperty(dependency)) {
             config.jasmine[dependency] = {
@@ -51,6 +50,12 @@ module.exports = function (grunt) {
                 livereload: true
             },
             tasks: ["jasmine"]
+        },
+        "jasmine-build": {
+            files: [source, tests],
+            options: {
+                livereload: true
+            }
         }
     };
     for (dependency in dependencies) {
@@ -58,12 +63,6 @@ module.exports = function (grunt) {
             config.watch["jasmine-" + dependency] = {
                 files: [source, tests],
                 tasks: ["jasmine:" + dependency]
-            };
-            config.watch["jasmine-" + dependency + "-build"] = {
-                files: [source, tests],
-                options: {
-                    livereload: true
-                }
             };
         }
     }
