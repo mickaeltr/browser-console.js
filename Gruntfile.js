@@ -23,7 +23,7 @@ module.exports = function (grunt) {
                 options: {
                     outfile: ".grunt/_SpecRunner.html",
                     specs: tests,
-                    vendor: dependencies[dependency]
+                    vendor: [dependencies[dependency], "http://localhost:35729/livereload.js"]
                 },
                 src: source
             };
