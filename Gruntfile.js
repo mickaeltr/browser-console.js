@@ -7,19 +7,15 @@ module.exports = function (grunt) {
         config = {};
 
     // Clean
-
     config.clean = ["lib/*.js.map", "lib/*.min.js", ".grunt"];
 
     // Jasmine (tests)
-
     config.jasmine = {};
-
     dependencies = {
         jquery1: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js",
         jquery2: "http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js",
         zepto: "http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.js"
     };
-
     for (dependency in dependencies) {
         if (dependencies.hasOwnProperty(dependency)) {
             config.jasmine[dependency] = {
@@ -34,11 +30,10 @@ module.exports = function (grunt) {
     }
 
     // Uglify (minification)
-
     config.uglify = {
         console: {
             files: {
-                "lib/console.min.js": [source]
+                "lib/console.min.js": source
             },
             options: {
                 sourceMap: true,
@@ -48,7 +43,7 @@ module.exports = function (grunt) {
     };
 
     grunt.initConfig(config);
-    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-jasmine");
     grunt.loadNpmTasks("grunt-contrib-uglify");
 };

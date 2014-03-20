@@ -1,12 +1,17 @@
 describe("console.js", function () {
+    "use strict";
 
     var config, console = window.console;
 
     beforeEach(function () {
-        console.log = function() {};
-        console.info = function() {};
-        console.warn = function() {};
-        console.error = function() {};
+        console.log = function () {
+        };
+        console.info = function () {
+        };
+        console.warn = function () {
+        };
+        console.error = function () {
+        };
         config = {serverUrl: "/logs"};
     });
 
