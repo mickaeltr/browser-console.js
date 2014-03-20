@@ -103,15 +103,22 @@ grunt watch:jasmine-jquery2
 
 #### In a browser
 
-`grunt jasmine:jquery2:build` then open file **.grunt/SpecRunner.html** in a browser
+```
+grunt jasmine:jquery2:build
+```
+then open file **.grunt/SpecRunner.html** in a browser
 
 With live reloading:
 
-`grunt jasmine:jquery2:build watch:jasmine-build`
+```
+grunt jasmine:jquery2:build watch:jasmine-build
+```
 
 ### Generates minified and source map files
 
-`grunt uglify`
+```
+grunt uglify
+```
 
 ## About
 
