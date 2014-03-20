@@ -11,9 +11,11 @@ You need to know what is happening on your client-side applications too.
 ## Usage
 
 First insert [jQuery](http://jquery.com/) (or [Zepto](http://zeptojs.com/)):
+
 ```<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>```
 
 Then insert [console.js](https://github.com/mickaeltr/console.js):
+
 ```<script src="lib/console.js"></script>```
 
 Finally initialize the console and play with it!
