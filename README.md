@@ -101,9 +101,9 @@ grunt watch:jasmine
 grunt watch:jasmine-jquery2
 ```
 
-### Run unit tests in the browser
+#### In a browser
 
-`grunt jasmine:jquery2:build` then open file **.grunt/_SpecRunner.html** in a browser
+`grunt jasmine:jquery2:build` then open file **.grunt/SpecRunner.html** in a browser
 
 With live reloading:
 

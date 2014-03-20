@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         if (dependencies.hasOwnProperty(dependency)) {
             config.jasmine[dependency] = {
                 options: {
-                    outfile: ".grunt/_SpecRunner.html",
+                    outfile: ".grunt/SpecRunner.html",
                     specs: tests,
                     vendor: [dependencies[dependency], "http://localhost:35729/livereload.js"]
                 },
