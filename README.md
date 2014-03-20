@@ -72,6 +72,47 @@ This will be sent (POST) to the server URL:
 * Default value: `false`
 * Description: flag for disabling the logging of global JavaScript errors (`window.onerror`)
 
+## Development
+
+### Clean up the project
+
+``grunt clean``
+
+### Run unit tests
+
+Unit tests can be executed againt different `$` dependencies: `jquery1`, `jquery2` and `zepto`.
+
+#### In the console
+
+```
+grunt jasmine
+```
+
+For a specific dependency:
+
+```
+grunt jasmine:jquery2
+```
+
+With live reloading:
+
+```
+grunt watch:jasmine
+grunt watch:jasmine-jquery2
+```
+
+### Run unit tests in the browser
+
+`grunt jasmine:jquery2:build` then open file **.grunt/_SpecRunner.html** in a browser
+
+With live reloading:
+
+`grunt jasmine:jquery2:build watch:jasmine-build`
+
+### Generates minified and source map files
+
+`grunt uglify`
+
 ## About
 
 [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
