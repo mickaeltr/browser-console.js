@@ -67,29 +67,28 @@ Your server needs to handle POST requests on the server URL and exploit the logs
 
 #### In the console
 
-```
+```bash
 grunt jasmine
 grunt watch:jasmine # with live reloading
 ```
 
 #### In a browser
 
-```
+```bash
 grunt jasmine:build
 grunt jasmine:build watch:jasmine-build # with livereloading
-
 ```
 then open file **.grunt/SpecRunner.html** in a browser
 
 ### Generate minified and source map files
 
-```
+```bash
 grunt uglify
 ```
 
 ### Clean up the project
 
-```
+```bash
 grunt clean
 ```
 
