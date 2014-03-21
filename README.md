@@ -17,7 +17,7 @@ Insert [console.js](https://github.com/mickaeltr/console.js), initialize the con
         serverUrl: "/logs"
     });
     console.warn("Writes a warning log in the JS console and sends it to the server");
-    console.xxxx("Sends an unexpected JavaScript error to the server (because there is no 'xxxx' level)");
+    console.xxxx("Sends an unexpected JS error to the server, as there is no 'xxxx' level/method");
 </script>
 ```
 
