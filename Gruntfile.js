@@ -12,7 +12,7 @@ module.exports = function (grunt) {
         config = {};
 
     // Clean
-    config.clean = ["lib/*.js.map", "lib/*.min.js", ".grunt", "node_modules", "npm-debug.log"];
+    config.clean = ["lib/*.js.map", "lib/*.min.js", ".grunt", "npm-debug.log"];
 
     // Jasmine (tests)
     config.jasmine = {};
