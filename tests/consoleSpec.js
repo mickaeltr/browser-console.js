@@ -308,7 +308,7 @@ describe("console.js", function () {
             window.onerror("message", "fileName", "lineNumber", "columnNumber", "error");
 
             // Then
-            expect(console.send).toHaveBeenCalledWith("error", "'message' fileName:lineNumber:columnNumber error");
+            expect(console.send).toHaveBeenCalledWith("error", "message (error) - fileName:lineNumber:columnNumber");
         });
 
         it("does not create a 'window.onerror' handler when 'disableJavaScriptErrorsLogging' is truthy", function () {
