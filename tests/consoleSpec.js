@@ -94,12 +94,12 @@ describe("console.js", function () {
                 config.levels = [];
                 expect(console.readConfig(config).config.levels).toEqual(defaultValue);
 
-                config.levels = ["", "  "];
+                config.levels = ["", "  ", null];
                 expect(console.readConfig(config).config.levels).toEqual(defaultValue);
             });
 
             it("cleans up given values", function () {
-                config.levels = [" ", "error  ", 123];
+                config.levels = [" ", "error  ", 123, null];
                 expect(console.readConfig(config).config.levels).toEqual(["error", "123"]);
             });
 
