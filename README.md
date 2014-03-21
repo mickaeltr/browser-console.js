@@ -40,6 +40,8 @@ This will be sent (POST) to the server URL:
 }
 ```
 
+Your server needs to handle POST requests on the server URL and exploit the logs. See an example with node.js in the server folder.
+
 ## Configuration
 
 **levels**
