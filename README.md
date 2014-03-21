@@ -63,41 +63,34 @@ Your server needs to handle POST requests on the server URL and exploit the logs
 
 ## Development
 
-### Clean up the project
-
-``grunt clean``
-
 ### Run unit tests
 
 #### In the console
 
 ```
 grunt jasmine
-```
-
-Or with live reloading:
-
-```
-grunt watch:jasmine
+grunt watch:jasmine # with live reloading
 ```
 
 #### In a browser
 
 ```
 grunt jasmine:build
+grunt jasmine:build watch:jasmine-build # with livereloading
+
 ```
 then open file **.grunt/SpecRunner.html** in a browser
 
-Or with live reloading:
-
-```
-grunt jasmine:build watch:jasmine-build
-```
-
-### Generates minified and source map files
+### Generate minified and source map files
 
 ```
 grunt uglify
+```
+
+### Clean up the project
+
+```
+grunt clean
 ```
 
 ## About
