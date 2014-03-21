@@ -21,7 +21,7 @@ Insert [console.js](https://github.com/mickaeltr/console.js), initialize the con
 </script>
 ```
 
-The following requests will be sent (POST) to the server URL (`/logs`):
+The following requests will be sent (`POST`) to the server URL (`/logs`):
 
 ```json
 {
@@ -37,7 +37,7 @@ The following requests will be sent (POST) to the server URL (`/logs`):
 }
 ```
 
-Your server needs to handle POST requests on the server URL and exploit the logs. See a node.js example at `server/server.js`.
+Your server needs to handle `POST` requests on the server URL and exploit the logs. See a node.js example at `server/server.js`.
 
 ## Configuration
 
