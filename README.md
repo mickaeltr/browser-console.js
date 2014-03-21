@@ -1,7 +1,6 @@
 # console.js [![Build Status](https://travis-ci.org/mickaeltr/console.js.svg?branch=master)](https://travis-ci.org/mickaeltr/console.js)
 
-JavaScript console that sends logs to a remote server.
-It also logs unexpected JavaScript global errors.
+JavaScript console that sends logs and unexpected JavaScript errors to a remote server.
 
 ## Why?
 
