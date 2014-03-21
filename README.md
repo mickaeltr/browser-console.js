@@ -5,8 +5,7 @@ It also logs unexpected JavaScript global errors.
 
 ## Why?
 
-You have plenty of logs for your server-side applications.
-You need to know what is happening on your client-side applications too.
+You have plenty of logs for your server-side applications but you do not know much about what is happening on the clients. You need to know what is happening there too.
 
 ## Usage
 
