@@ -14,7 +14,7 @@ app.get("/", function (req, res) {
 });
 
 app.get("/console.js", function (req, res) {
-    res.sendfile(path.resolve("../src/console.js"));
+    res.sendfile(path.resolve("../lib/console.js"));
 });
 
 app.post("/logs", function (req, res) {

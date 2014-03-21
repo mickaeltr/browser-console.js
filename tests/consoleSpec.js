@@ -268,16 +268,16 @@ describe("console.js", function () {
 
             it("call and return the result of the original function", function () {
                 // Given
-                spyOn(console, "error").and.returnValue("returns");
+                spyOn(console, "warn").and.returnValue("warn");
                 console.readConfig(config)
                     .createOrOverrideLogFunctions();
 
                 // When
-                var returns = console.error("Message", "[1]");
+                var returns = console.warn("Message", "[1]");
 
                 // Then
-                expect(returns).toEqual("returns");
-                expect(console.original.error).toHaveBeenCalledWith("Message, [1]");
+                expect(returns).toEqual("warn");
+                expect(console.original.warn).toHaveBeenCalledWith("Message, [1]");
             });
 
             it("call the 'send' function", function () {
@@ -287,10 +287,10 @@ describe("console.js", function () {
                 spyOn(console, "send").and.stub();
 
                 // When
-                console.error("Message", "[2]");
+                console.warn("Message", "[2]");
 
                 // Then
-                expect(console.send).toHaveBeenCalledWith("error", "Message, [2]");
+                expect(console.send).toHaveBeenCalledWith("warn", "Message, [2]");
             });
 
             it("do not break on error", function () {
