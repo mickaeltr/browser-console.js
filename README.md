@@ -13,30 +13,31 @@ Insert [console.js](https://github.com/mickaeltr/console.js), initialize the con
 ```html
 <script src="lib/console.js"></script>
 <script>
-    console.init({serverUrl: "/logs"});
+    console.init({
+        serverUrl: "/logs"
+    });
     console.warn("Writes a warning log in the JS console and sends it to the server");
+    console.xxxx("Sends an unexpected JavaScript error to the server (because there is no 'xxxx' level)");
 </script>
 ```
 
-This will be sent (POST) to the server URL:
+The following requests will be sent (POST) to the server URL (`/logs`):
 
 ```json
 {
     "level": "warn",
-    "message": "[http://www.example.com/] Writes a warning log in the JS console and sends it to the server"
+    "message": "[http://localhost:1337/] Writes a warning log in the JS console and sends it to the server
 }
 ```
-
-Or when an unexpected JavaScript error occurs:
 
 ```json
 {
     "level": "error",
-    "message": "[http://www.example.com/] Uncaught TypeError: Object #<Console> has no method 'fatal' - http://example.com/application.js:13"
+    "message": "[http://localhost:1337/] TypeError: console.xxxx is not a function - http://localhost:1337/:135"
 }
 ```
 
-Your server needs to handle POST requests on the server URL and exploit the logs. See an example with node.js at `server/server.js`.
+Your server needs to handle POST requests on the server URL and exploit the logs. See a node.js example at `server/server.js`.
 
 ## Configuration
 

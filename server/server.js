@@ -13,7 +13,7 @@ app.get("/", function (req, res) {
     res.sendfile("index.html");
 });
 
-app.get("/console.js", function (req, res) {
+app.get("/lib/console.js", function (req, res) {
     res.sendfile(path.resolve("../lib/console.js"));
 });
 
