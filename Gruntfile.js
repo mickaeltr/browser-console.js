@@ -3,31 +3,20 @@ module.exports = function (grunt) {
 
     var source = "lib/console.js",
         tests = "tests/*.js",
-        dependencies = {
-            jquery1: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js",
-            jquery2: "http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js",
-            zepto: "http://cdnjs.cloudflare.com/ajax/libs/zepto/1.1.3/zepto.js"
-        },
-        dependency,
         config = {};
 
     // Clean
     config.clean = ["lib/*.js.map", "lib/*.min.js", ".grunt", "npm-debug.log"];
 
     // Jasmine (tests)
-    config.jasmine = {};
-    for (dependency in dependencies) {
-        if (dependencies.hasOwnProperty(dependency)) {
-            config.jasmine[dependency] = {
-                options: {
-                    outfile: ".grunt/SpecRunner.html",
-                    specs: tests,
-                    vendor: [dependencies[dependency], "http://localhost:35729/livereload.js"]
-                },
-                src: source
-            };
-        }
-    }
+    config.jasmine = {
+        options: {
+            outfile: ".grunt/SpecRunner.html",
+            specs: tests,
+            vendor: "http://localhost:35729/livereload.js"
+        },
+        src: source
+    };
 
     // Uglify (minification)
     config.uglify = {
@@ -46,9 +35,6 @@ module.exports = function (grunt) {
     config.watch = {
         jasmine: {
             files: [source, tests],
-            options: {
-                livereload: true
-            },
             tasks: ["jasmine"]
         },
         "jasmine-build": {
@@ -58,14 +44,6 @@ module.exports = function (grunt) {
             }
         }
     };
-    for (dependency in dependencies) {
-        if (dependencies.hasOwnProperty(dependency)) {
-            config.watch["jasmine-" + dependency] = {
-                files: [source, tests],
-                tasks: ["jasmine:" + dependency]
-            };
-        }
-    }
 
     grunt.initConfig(config);
     grunt.loadNpmTasks("grunt-contrib-clean");

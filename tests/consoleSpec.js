@@ -24,53 +24,6 @@ describe("console.js", function () {
         expect(console.init).toBeDefined();
     });
 
-    describe("checkDependencies", function () {
-
-        var expectedErrorMessage = "Missing dependency: $ (jQuery or Zepto)";
-
-        it("is chainable", function () {
-            // When
-            var returns = console.checkDependencies();
-
-            // Then
-            expect(returns).toBe(console);
-        });
-
-        it("throws an error if the $ dependency is missing", function () {
-            // Given
-            var $ = window.$, error;
-            delete window.$;
-
-            // When
-            try {
-                console.checkDependencies();
-            } catch (e) {
-                error = e;
-            }
-
-            // Then
-            expect(error).toEqual(expectedErrorMessage);
-            window.$ = $;
-        });
-
-        it("throws an error if a function is missing in the $ dependency", function () {
-            // Given
-            var $ajax = window.$.ajax, error;
-            delete window.$.ajax;
-
-            // When
-            try {
-                console.checkDependencies();
-            } catch (e) {
-                error = e;
-            }
-
-            // Then
-            expect(error).toEqual(expectedErrorMessage);
-            window.$.ajax = $ajax;
-        });
-    });
-
     describe("readConfig", function () {
 
         it("is chainable", function () {
@@ -406,7 +359,7 @@ describe("console.js", function () {
 
         it("does not send if 'serverUrl' is not specified", function () {
             // Given
-            spyOn(window.$, "ajax");
+            spyOn(console, "createHttp");
             delete config.serverUrl;
 
             // When
@@ -414,24 +367,24 @@ describe("console.js", function () {
                 .send("info", "message");
 
             // Then
-            expect(window.$.ajax).not.toHaveBeenCalled();
+            expect(console.createHttp).not.toHaveBeenCalled();
         });
 
         it("does not send if there is no message", function () {
             // Given
-            spyOn(window.$, "ajax");
+            spyOn(console, "createHttp");
 
             // When
             console.readConfig(config)
                 .send("info", "");
 
             // Then
-            expect(window.$.ajax).not.toHaveBeenCalled();
+            expect(console.createHttp).not.toHaveBeenCalled();
         });
 
         it("does not send if the level is lower than the 'levelEnabledOnServer'", function () {
             // Given
-            spyOn(window.$, "ajax");
+            spyOn(console, "createHttp");
             config.levelEnabledOnServer = "warn";
 
             // When
@@ -439,12 +392,13 @@ describe("console.js", function () {
                 .send("info", "message");
 
             // Then
-            expect(window.$.ajax).not.toHaveBeenCalled();
+            expect(console.createHttp).not.toHaveBeenCalled();
         });
 
         it("sends the log to the server if the level is equal to the 'levelEnabledOnServer'", function () {
             // Given
-            spyOn(window.$, "ajax");
+            var http = jasmine.createSpyObj("http", ["open", "setRequestHeader", "send"]);
+            spyOn(console, "createHttp").and.returnValue(http);
             config.levelEnabledOnServer = "warn";
 
             // When
@@ -452,18 +406,16 @@ describe("console.js", function () {
                 .send("warn", "messageWarn");
 
             // Then
-            expect(window.$.ajax).toHaveBeenCalledWith({
-                type: "POST",
-                url: config.serverUrl,
-                data: '{"level":"warn","message":"[' + window.location + '] messageWarn"}',
-                contentType: "application/json",
-                global: false
-            });
+            expect(console.createHttp).toHaveBeenCalled();
+            expect(http.open).toHaveBeenCalledWith("POST", config.serverUrl, true);
+            expect(http.setRequestHeader).toHaveBeenCalledWith("Content-Type", "application/json");
+            expect(http.send).toHaveBeenCalledWith('{"level":"warn","message":"[' + window.location + '] messageWarn"}');
         });
 
         it("sends the log to the server if the level is greater than the 'levelEnabledOnServer'", function () {
             // Given
-            spyOn(window.$, "ajax");
+            var http = jasmine.createSpyObj("http", ["open", "setRequestHeader", "send"]);
+            spyOn(console, "createHttp").and.returnValue(http);
             config.levelEnabledOnServer = "warn";
 
             // When
@@ -471,15 +423,22 @@ describe("console.js", function () {
                 .send("error", "messageError");
 
             // Then
-            expect(window.$.ajax).toHaveBeenCalledWith({
-                type: "POST",
-                url: config.serverUrl,
-                data: '{"level":"error","message":"[' + window.location + '] messageError"}',
-                contentType: "application/json",
-                global: false
-            });
+            expect(console.createHttp).toHaveBeenCalled();
+            expect(http.open).toHaveBeenCalledWith("POST", config.serverUrl, true);
+            expect(http.setRequestHeader).toHaveBeenCalledWith("Content-Type", "application/json");
+            expect(http.send).toHaveBeenCalledWith('{"level":"error","message":"[' + window.location + '] messageError"}');
         });
 
+
+        it("does not break if 'createHttp' does not work", function() {
+            // Given
+            spyOn(console, "createHttp").and.returnValue(null);
+            config.levelEnabledOnServer = "warn";
+
+            // When
+            console.readConfig(config)
+                .send("error", "messageError");
+        });
     });
 
     describe("init", function () {
@@ -501,17 +460,6 @@ describe("console.js", function () {
 
             // Then
             expect(console.restore).toHaveBeenCalled();
-        });
-
-        it("checks the dependencies", function () {
-            // Given
-            spyOn(console, "checkDependencies").and.callThrough();
-
-            // When
-            console.init(config);
-
-            // Then
-            expect(console.checkDependencies).toHaveBeenCalled();
         });
 
         it("reads the given configuration", function () {

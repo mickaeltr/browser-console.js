@@ -8,21 +8,10 @@ You have plenty of logs for your server-side applications but you do not know mu
 
 ## Usage
 
-First insert [jQuery](http://jquery.com/) (or [Zepto](http://zeptojs.com/)):
-
-```html
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-```
-
-Then insert [console.js](https://github.com/mickaeltr/console.js):
+Insert [console.js](https://github.com/mickaeltr/console.js), initialize the console and play with it:
 
 ```html
 <script src="lib/console.js"></script>
-```
-
-Finally initialize the console and play with it!
-
-```html
 <script>
     console.init({serverUrl: "/logs"});
     console.warn("Writes a warning log in the JS console and sends it to the server");
@@ -80,38 +69,29 @@ Your server needs to handle POST requests on the server URL and exploit the logs
 
 ### Run unit tests
 
-Unit tests can be executed againt different `$` dependencies: `jquery1`, `jquery2` and `zepto`.
-
 #### In the console
 
 ```
 grunt jasmine
 ```
 
-For a specific dependency:
-
-```
-grunt jasmine:jquery2
-```
-
-With live reloading:
+Or with live reloading:
 
 ```
 grunt watch:jasmine
-grunt watch:jasmine-jquery2
 ```
 
 #### In a browser
 
 ```
-grunt jasmine:jquery2:build
+grunt jasmine:build
 ```
 then open file **.grunt/SpecRunner.html** in a browser
 
-With live reloading:
+Or with live reloading:
 
 ```
-grunt jasmine:jquery2:build watch:jasmine-build
+grunt jasmine:build watch:jasmine-build
 ```
 
 ### Generates minified and source map files
