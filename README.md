@@ -26,7 +26,7 @@ The following requests will be sent (POST) to the server URL (`/logs`):
 ```json
 {
     "level": "warn",
-    "message": "[http://localhost:1337/] Writes a warning log in the JS console and sends it to the server
+    "message": "[http://localhost:1337/] Writes a warning log in the JS console and sends it to the server"
 }
 ```
 
