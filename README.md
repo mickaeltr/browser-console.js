@@ -57,20 +57,20 @@ Your server needs to handle POST requests on the server URL and exploit the logs
 * Default value: first item in the levels list
 * Description: level used for `console.log` calls
 
-**levelForGlobalErrors**
+**levelForJavaScriptErrors**
 
 * Default value: last item in the levels list
-* Description: level used for global JavaScript errors logging
+* Description: level used for JavaScript errors logging
 
 **serverUrl**
 
 * Default value: none
 * Description: URL of the server for sending logs
 
-**disableGlobalErrorsLogging**
+**disableJavaScriptErrorsLogging**
 
 * Default value: `false`
-* Description: flag for disabling the logging of global JavaScript errors (`window.onerror`)
+* Description: flag for disabling the logging of JavaScript errors (`window.onerror`)
 
 ## Development
 

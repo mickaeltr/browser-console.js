@@ -137,18 +137,18 @@ describe("console.js", function () {
 
         });
 
-        describe("levelForGlobalErrors", function () {
+        describe("levelForJavaScriptErrors", function () {
 
             it("sets a default value when invalid or not specified", function () {
-                expect(console.readConfig(config).config.levelForGlobalErrors).toEqual("error");
+                expect(console.readConfig(config).config.levelForJavaScriptErrors).toEqual("error");
 
-                config.levelForGlobalErrors = "invalid";
-                expect(console.readConfig(config).config.levelForGlobalErrors).toEqual("error");
+                config.levelForJavaScriptErrors = "invalid";
+                expect(console.readConfig(config).config.levelForJavaScriptErrors).toEqual("error");
             });
 
             it("cleans up given values", function () {
-                config.levelForGlobalErrors = " warn ";
-                expect(console.readConfig(config).config.levelForGlobalErrors).toEqual("warn");
+                config.levelForJavaScriptErrors = " warn ";
+                expect(console.readConfig(config).config.levelForJavaScriptErrors).toEqual("warn");
             });
 
         });
@@ -175,21 +175,21 @@ describe("console.js", function () {
 
         });
 
-        describe("disableGlobalErrorsLogging", function () {
+        describe("disableJavaScriptErrorsLogging", function () {
 
             it("sets a default value when not specified", function () {
-                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(false);
+                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(false);
 
-                config.disableGlobalErrorsLogging = "invalid";
-                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(false);
+                config.disableJavaScriptErrorsLogging = "invalid";
+                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(false);
             });
 
             it("cleans up given values", function () {
-                config.disableGlobalErrorsLogging = " true ";
-                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(true);
+                config.disableJavaScriptErrorsLogging = " true ";
+                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(true);
 
-                config.disableGlobalErrorsLogging = " false ";
-                expect(console.readConfig(config).config.disableGlobalErrorsLogging).toEqual(false);
+                config.disableJavaScriptErrorsLogging = " false ";
+                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(false);
             });
 
         });
@@ -306,13 +306,13 @@ describe("console.js", function () {
         });
     });
 
-    describe("handleGlobalErrorsLogging", function () {
+    describe("handleJavaScriptErrorsLogging", function () {
 
         it("is chainable", function () {
             // When
             var returns = console
                 .readConfig(config)
-                .handleGlobalErrorsLogging();
+                .handleJavaScriptErrorsLogging();
 
             // Then
             expect(returns).toBe(console);
@@ -327,18 +327,18 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .handleGlobalErrorsLogging();
+                .handleJavaScriptErrorsLogging();
 
             // Then
             expect(window.onerror).toBeDefined();
             expect(window.onerror).not.toBe(originalOnErrorHandler);
-            expect(console.log).toHaveBeenCalledWith("window.onerror will be overriden; you can prevent this by setting 'disableGlobalErrorsLogging' to true");
+            expect(console.log).toHaveBeenCalledWith("window.onerror will be overriden; you can prevent this by setting 'disableJavaScriptErrorsLogging' to true");
         });
 
         it("creates a 'window.onerror' handler", function () {
             // When
             console.readConfig(config)
-                .handleGlobalErrorsLogging();
+                .handleJavaScriptErrorsLogging();
 
             // Then
             expect(window.onerror).toBeDefined();
@@ -349,7 +349,7 @@ describe("console.js", function () {
             // Given
             spyOn(console, "send");
             console.readConfig(config)
-                .handleGlobalErrorsLogging();
+                .handleJavaScriptErrorsLogging();
 
             // When
             window.onerror("message", "fileName", "lineNumber", "columnNumber", "error");
@@ -358,31 +358,31 @@ describe("console.js", function () {
             expect(console.send).toHaveBeenCalledWith("error", "'message' fileName:lineNumber:columnNumber error");
         });
 
-        it("does not create a 'window.onerror' handler when 'disableGlobalErrorsLogging' is truthy", function () {
+        it("does not create a 'window.onerror' handler when 'disableJavaScriptErrorsLogging' is truthy", function () {
             // Given
             console.readConfig(config)
-                .handleGlobalErrorsLogging();
-            config.disableGlobalErrorsLogging = true;
+                .handleJavaScriptErrorsLogging();
+            config.disableJavaScriptErrorsLogging = true;
 
             // When
             console.readConfig(config)
-                .handleGlobalErrorsLogging();
+                .handleJavaScriptErrorsLogging();
 
             // Then
             expect(window.onerror).toBeNull();
             expect(console.onError).toBeUndefined();
         });
 
-        it("preserves the existing 'window.onerror' handler when 'disableGlobalErrorsLogging' is truthy", function () {
+        it("preserves the existing 'window.onerror' handler when 'disableJavaScriptErrorsLogging' is truthy", function () {
             // Given
             var originalOnErrorHandler = function () {
             };
             window.onerror = originalOnErrorHandler;
-            config.disableGlobalErrorsLogging = true;
+            config.disableJavaScriptErrorsLogging = true;
 
             // When
             console.readConfig(config)
-                .handleGlobalErrorsLogging();
+                .handleJavaScriptErrorsLogging();
 
             // Then
             expect(window.onerror).toBe(originalOnErrorHandler);
@@ -536,15 +536,15 @@ describe("console.js", function () {
             expect(console.createOrOverrideLogFunctions).toHaveBeenCalled();
         });
 
-        it("handles global errors logging", function () {
+        it("handles JavaScript errors logging", function () {
             // Given
-            spyOn(console, "handleGlobalErrorsLogging").and.callThrough();
+            spyOn(console, "handleJavaScriptErrorsLogging").and.callThrough();
 
             // When
             console.init(config);
 
             // Then
-            expect(console.handleGlobalErrorsLogging).toHaveBeenCalled();
+            expect(console.handleJavaScriptErrorsLogging).toHaveBeenCalled();
         });
 
     });
@@ -559,19 +559,19 @@ describe("console.js", function () {
             expect(returns).toBe(console);
         });
 
-        it("disables the global errors handling", function () {
+        it("disables JavaScript errors handling", function () {
             // Given
             console.readConfig(config)
-                .handleGlobalErrorsLogging();
-            spyOn(console, "handleGlobalErrorsLogging").and.callFake(function () {
-                expect(console.config.disableGlobalErrorsLogging).toBe(true);
+                .handleJavaScriptErrorsLogging();
+            spyOn(console, "handleJavaScriptErrorsLogging").and.callFake(function () {
+                expect(console.config.disableJavaScriptErrorsLogging).toBe(true);
             });
 
             // When
             console.restore();
 
             // Then
-            expect(console.handleGlobalErrorsLogging).toHaveBeenCalled();
+            expect(console.handleJavaScriptErrorsLogging).toHaveBeenCalled();
         });
 
         it("restores original log functions", function () {
