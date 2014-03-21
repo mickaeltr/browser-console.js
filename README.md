@@ -4,7 +4,7 @@ JavaScript console that sends logs and unexpected JavaScript errors to a remote 
 
 ## Why?
 
-You have plenty of logs for your server-side applications but you do not know much about what is happening on the clients. You need to know what is happening there too.
+You have plenty of logs for your server-side applications but you do not know much about your client-side. You need to know what is happening there too.
 
 ## Usage
 
