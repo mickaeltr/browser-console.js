@@ -23,11 +23,20 @@ This will be sent (POST) to the server URL:
 ```json
 {
     "level": "warn",
-    "message": "[<window.location>] Writes a warning log in the JS console and sends it to the server"
+    "message": "[http://www.example.com/] Writes a warning log in the JS console and sends it to the server"
 }
 ```
 
-Your server needs to handle POST requests on the server URL and exploit the logs. See an example with node.js in the server folder.
+Or when an unexpected JavaScript error occurs:
+
+```json
+{
+    "level": "error",
+    "message": "[http://www.example.com/] Uncaught TypeError: Object #<Console> has no method 'fatal' - http://example.com/application.js:13"
+}
+```
+
+Your server needs to handle POST requests on the server URL and exploit the logs. See an example with node.js at `server/server.js`.
 
 ## Configuration
 
