@@ -26,7 +26,7 @@ module.exports = function (grunt) {
             },
             options: {
                 sourceMap: true,
-                sourceMapName: source + ".map"
+                sourceMapName: "lib/console.min.js.map"
             }
         }
     };
