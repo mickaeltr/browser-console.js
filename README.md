@@ -73,6 +73,11 @@ Your server needs to handle `POST` requests on the server URL and exploit the lo
 
 ## Development
 
+### Prerequisites
+
+* [node.js](http://nodejs.org/)
+* [Grunt](http://gruntjs.com/)
+
 ### Run unit tests
 
 #### In the console
