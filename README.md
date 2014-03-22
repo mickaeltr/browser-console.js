@@ -41,6 +41,11 @@ Your server needs to handle `POST` requests on the server URL and exploit the lo
 
 ## Configuration
 
+**serverUrl**
+
+* Default value: none
+* Description: URL of the server for sending logs
+
 **levels**
 
 * Default value: `["info", "warn", "error"]`
@@ -60,11 +65,6 @@ Your server needs to handle `POST` requests on the server URL and exploit the lo
 
 * Default value: last item in the levels list
 * Description: level used for JavaScript errors logging
-
-**serverUrl**
-
-* Default value: none
-* Description: URL of the server for sending logs
 
 **disableJavaScriptErrorsLogging**
 
