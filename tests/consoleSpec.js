@@ -155,12 +155,12 @@ describe("console.js", function () {
 
     });
 
-    describe("proxyLogFunctions", function () {
+    describe("proxyConsoleFunctions", function () {
 
         it("is chainable", function () {
             // When
             var returns = console.readConfig(config)
-                .proxyLogFunctions();
+                .proxyConsoleFunctions();
 
             // Then
             expect(returns).toBe(console);
@@ -173,7 +173,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .proxyLogFunctions();
+                .proxyConsoleFunctions();
 
             // Then
             expect(console.original.log).toBeDefined();
@@ -192,7 +192,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .proxyLogFunctions();
+                .proxyConsoleFunctions();
 
             // Then
             expect(console.original.log).toBe(originalConsoleLog);
@@ -206,7 +206,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .proxyLogFunctions();
+                .proxyConsoleFunctions();
 
             // Then
             expect(console.level1).toBeDefined();
@@ -217,7 +217,7 @@ describe("console.js", function () {
         it("creates a function for log level, even when not specified", function () {
             // When
             console.readConfig(config)
-                .proxyLogFunctions();
+                .proxyConsoleFunctions();
 
             // Then
             expect(console.log).toBe(console[console.config.levelForConsoleLog]);
@@ -229,7 +229,7 @@ describe("console.js", function () {
                 // Given
                 spyOn(console, "warn").and.returnValue("warn");
                 console.readConfig(config)
-                    .proxyLogFunctions();
+                    .proxyConsoleFunctions();
 
                 // When
                 var returns = console.warn("Message", "[1]");
@@ -242,7 +242,7 @@ describe("console.js", function () {
             it("call the 'send' function", function () {
                 // Given
                 console.readConfig(config)
-                    .proxyLogFunctions();
+                    .proxyConsoleFunctions();
                 spyOn(console, "send").and.stub();
 
                 // When
@@ -255,7 +255,7 @@ describe("console.js", function () {
             it("do not break on error", function () {
                 // Given
                 console.readConfig(config)
-                    .proxyLogFunctions();
+                    .proxyConsoleFunctions();
                 spyOn(console.original, "error").and.throwError("error");
 
                 // When
@@ -493,13 +493,13 @@ describe("console.js", function () {
 
         it("creates or overrides log functions", function () {
             // Given
-            spyOn(console, "proxyLogFunctions").and.callThrough();
+            spyOn(console, "proxyConsoleFunctions").and.callThrough();
 
             // When
             console.init(config);
 
             // Then
-            expect(console.proxyLogFunctions).toHaveBeenCalled();
+            expect(console.proxyConsoleFunctions).toHaveBeenCalled();
         });
 
         it("handles JavaScript errors logging", function () {
@@ -548,7 +548,7 @@ describe("console.js", function () {
                 originalConsoleError = console.error;
 
             console.readConfig(config)
-                .proxyLogFunctions();
+                .proxyConsoleFunctions();
 
             // When
             console.restore();
