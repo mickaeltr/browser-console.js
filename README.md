@@ -97,8 +97,8 @@ grunt watch:jasmine # with live reloading
 #### In a browser
 
 ```bash
-grunt jasmine:build
-grunt jasmine:build watch:jasmine-build # with livereloading
+grunt jasmine:console:build
+grunt jasmine:console:build watch:jasmine-build # with livereloading
 ```
 then open file **.grunt/SpecRunner.html** in a browser
 

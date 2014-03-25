@@ -10,12 +10,14 @@ module.exports = function (grunt) {
 
     // Jasmine (tests)
     config.jasmine = {
-        options: {
-            outfile: ".grunt/SpecRunner.html",
-            specs: tests,
-            vendor: "http://localhost:35729/livereload.js"
-        },
-        src: source
+        console: {
+            options: {
+                outfile: ".grunt/SpecRunner.html",
+                specs: tests,
+                vendor: "http://localhost:35729/livereload.js"
+            },
+            src: source
+        }
     };
 
     // Uglify (minification)
