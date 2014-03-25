@@ -22,7 +22,10 @@ app.post("/logs", function (req, res) {
         var method = req.body.level,
             message = req.body.message;
         if (console[method] && message) {
-            console[method].call(this, message);
+            console[method].call(this, req.get("Referer") + " - " +
+                req.get("User-Agent") + "\n" +
+                message
+            );
         }
     } catch (ignored) {
     }
