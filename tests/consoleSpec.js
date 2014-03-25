@@ -308,7 +308,7 @@ describe("console.js", function () {
             window.onerror("message", "fileName", "lineNumber", "columnNumber", "error");
 
             // Then
-            expect(console.send).toHaveBeenCalledWith("error", "message (error) - fileName:lineNumber:columnNumber");
+            expect(console.send).toHaveBeenCalledWith("error", "[fileName:lineNumber:columnNumber] message (error)");
         });
 
         it("does not create a 'window.onerror' handler when 'disableJavaScriptErrorsLogging' is truthy", function () {
@@ -370,6 +370,18 @@ describe("console.js", function () {
             expect(console.createHttp).not.toHaveBeenCalled();
         });
 
+        it("does not send if the level does not exist", function () {
+            // Given
+            spyOn(console, "createHttp");
+
+            // When
+            console.readConfig(config)
+                .send("fatal", "message");
+
+            // Then
+            expect(console.createHttp).not.toHaveBeenCalled();
+        });
+
         it("does not send if there is no message", function () {
             // Given
             spyOn(console, "createHttp");
@@ -409,7 +421,7 @@ describe("console.js", function () {
             expect(console.createHttp).toHaveBeenCalled();
             expect(http.open).toHaveBeenCalledWith("POST", config.serverUrl, true);
             expect(http.setRequestHeader).toHaveBeenCalledWith("Content-Type", "application/json");
-            expect(http.send).toHaveBeenCalledWith('{"level":"warn","message":"[' + window.location + '] messageWarn"}');
+            expect(http.send).toHaveBeenCalledWith('{"level":"warn","message":"messageWarn"}');
         });
 
         it("sends the log to the server if the level is greater than the 'levelEnabledOnServer'", function () {
@@ -426,11 +438,11 @@ describe("console.js", function () {
             expect(console.createHttp).toHaveBeenCalled();
             expect(http.open).toHaveBeenCalledWith("POST", config.serverUrl, true);
             expect(http.setRequestHeader).toHaveBeenCalledWith("Content-Type", "application/json");
-            expect(http.send).toHaveBeenCalledWith('{"level":"error","message":"[' + window.location + '] messageError"}');
+            expect(http.send).toHaveBeenCalledWith('{"level":"error","message":"messageError"}');
         });
 
 
-        it("does not break if 'createHttp' does not work", function() {
+        it("does not break if 'createHttp' does not work", function () {
             // Given
             spyOn(console, "createHttp").and.returnValue(null);
             config.levelEnabledOnServer = "warn";

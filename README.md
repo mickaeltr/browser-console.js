@@ -26,15 +26,22 @@ The following requests will be sent (`POST`) to the server URL (`/logs`):
 ```json
 {
     "level": "warn",
-    "message": "[http://localhost:1337/] Writes a warning log in the JS console and sends it to the server"
+    "message": "Writes a warning log in the JS console and sends it to the server"
 }
 ```
 
 ```json
 {
     "level": "error",
-    "message": "[http://localhost:1337/] TypeError: console.xxxx is not a function - http://localhost:1337/:135"
+    "message": "[http://localhost:1337/:15] TypeError: console.xxxx is not a function"
 }
+```
+
+HTTP headers of `POST` requests can be useful too:
+
+```
+Referer: http://localhost:1337/
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:28.0) Gecko/20100101 Firefox/28.0
 ```
 
 Your server needs to handle `POST` requests on the server URL and exploit the logs. See a node.js example at `server/server.js`.
