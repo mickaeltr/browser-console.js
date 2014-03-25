@@ -73,10 +73,10 @@ Your server needs to handle `POST` requests on the server URL and exploit the lo
 * Default value: last item in the levels list
 * Description: level used for JavaScript errors logging
 
-**disableJavaScriptErrorsLogging**
+**logJavaScriptErrors**
 
-* Default value: `false`
-* Description: flag for disabling the logging of JavaScript errors (`window.onerror`)
+* Default value: `true`
+* Description: activation flag for logging JavaScript errors (`window.onerror`)
 
 ## Development
 

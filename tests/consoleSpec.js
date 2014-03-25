@@ -128,21 +128,27 @@ describe("console.js", function () {
 
         });
 
-        describe("disableJavaScriptErrorsLogging", function () {
+        describe("logJavaScriptErrors", function () {
 
             it("sets a default value when not specified", function () {
-                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(false);
+                expect(console.readConfig(config).config.logJavaScriptErrors).toEqual(true);
 
-                config.disableJavaScriptErrorsLogging = "invalid";
-                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(false);
+                config.logJavaScriptErrors = "invalid";
+                expect(console.readConfig(config).config.logJavaScriptErrors).toEqual(true);
             });
 
             it("cleans up given values", function () {
-                config.disableJavaScriptErrorsLogging = " true ";
-                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(true);
+                config.logJavaScriptErrors = " true ";
+                expect(console.readConfig(config).config.logJavaScriptErrors).toEqual(true);
 
-                config.disableJavaScriptErrorsLogging = " false ";
-                expect(console.readConfig(config).config.disableJavaScriptErrorsLogging).toEqual(false);
+                config.logJavaScriptErrors = false;
+                expect(console.readConfig(config).config.logJavaScriptErrors).toEqual(false);
+
+                config.logJavaScriptErrors = true;
+                expect(console.readConfig(config).config.logJavaScriptErrors).toEqual(true);
+
+                config.logJavaScriptErrors = " false ";
+                expect(console.readConfig(config).config.logJavaScriptErrors).toEqual(false);
             });
 
         });
@@ -285,7 +291,7 @@ describe("console.js", function () {
             // Then
             expect(window.onerror).toBeDefined();
             expect(window.onerror).not.toBe(originalOnErrorHandler);
-            expect(console.log).toHaveBeenCalledWith("window.onerror will be overriden; you can prevent this by setting 'disableJavaScriptErrorsLogging' to true");
+            expect(console.log).toHaveBeenCalledWith("window.onerror will be overriden; you can prevent this by setting 'logJavaScriptErrors' to false");
         });
 
         it("creates a 'window.onerror' handler", function () {
@@ -311,11 +317,11 @@ describe("console.js", function () {
             expect(console.send).toHaveBeenCalledWith("error", "[fileName:lineNumber:columnNumber] message (error)");
         });
 
-        it("does not create a 'window.onerror' handler when 'disableJavaScriptErrorsLogging' is truthy", function () {
+        it("does not create a 'window.onerror' handler when 'logJavaScriptErrors' is false", function () {
             // Given
             console.readConfig(config)
                 .handleJavaScriptErrorsLogging();
-            config.disableJavaScriptErrorsLogging = true;
+            config.logJavaScriptErrors = false;
 
             // When
             console.readConfig(config)
@@ -326,12 +332,12 @@ describe("console.js", function () {
             expect(console.onError).toBeUndefined();
         });
 
-        it("preserves the existing 'window.onerror' handler when 'disableJavaScriptErrorsLogging' is truthy", function () {
+        it("preserves the existing 'window.onerror' handler when 'logJavaScriptErrors' is false", function () {
             // Given
             var originalOnErrorHandler = function () {
             };
             window.onerror = originalOnErrorHandler;
-            config.disableJavaScriptErrorsLogging = true;
+            config.logJavaScriptErrors = false;
 
             // When
             console.readConfig(config)
@@ -524,7 +530,7 @@ describe("console.js", function () {
             console.readConfig(config)
                 .handleJavaScriptErrorsLogging();
             spyOn(console, "handleJavaScriptErrorsLogging").and.callFake(function () {
-                expect(console.config.disableJavaScriptErrorsLogging).toBe(true);
+                expect(console.config.logJavaScriptErrors).toBe(false);
             });
 
             // When
