@@ -82,7 +82,7 @@ Your server needs to handle `POST` requests on the server URL and exploit the lo
 
 Optionally insert [stacktrace.js](https://github.com/stacktracejs/stacktrace.js) and you will get stack traces for errors:
 
-```
+```json
 {
     "level": "warn",
     "message": "Writes a warning log in the JS console and sends it to the server, Error: Oops!",
