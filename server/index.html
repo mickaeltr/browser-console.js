@@ -6,12 +6,13 @@
 </head>
 <body>
 <h1>console.js</h1>
+<script src="//cdn.jsdelivr.net/stacktrace.js/0.6.0/stacktrace.js"></script>
 <script src="lib/console.js"></script>
 <script>
     console.init({
         serverUrl: "/logs"
     });
-    console.warn("Writes a warning log in the JS console and sends it to the server");
+    console.warn("Writes a warning log in the JS console and sends it to the server", new Error("Oops!"));
     console.xxxx("Sends an unexpected JS error to the server, as there is no 'xxxx' level/method");
 </script>
 </body>

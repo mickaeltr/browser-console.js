@@ -14,7 +14,10 @@ module.exports = function (grunt) {
             options: {
                 outfile: ".grunt/SpecRunner.html",
                 specs: tests,
-                vendor: "http://localhost:35729/livereload.js"
+                vendor: [
+                    "http://cdn.jsdelivr.net/stacktrace.js/0.6.0/stacktrace.js",
+                    "http://localhost:35729/livereload.js"
+                ]
             },
             src: source
         }

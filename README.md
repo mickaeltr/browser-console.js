@@ -16,7 +16,7 @@ Insert [console.js](https://github.com/mickaeltr/console.js), initialize the con
     console.init({
         serverUrl: "/logs"
     });
-    console.warn("Writes a warning log in the JS console and sends it to the server");
+    console.warn("Writes a warning log in the JS console and sends it to the server", new Error("Oops"));
     console.xxxx("Sends an unexpected JS error to the server, as there is no 'xxxx' level/method");
 </script>
 ```
@@ -26,14 +26,14 @@ The following requests will be sent (`POST`) to the server URL (`/logs`):
 ```json
 {
     "level": "warn",
-    "message": "Writes a warning log in the JS console and sends it to the server"
+    "message": "Writes a warning log in the JS console and sends it to the server, Error: Oops!"
 }
 ```
 
 ```json
 {
     "level": "error",
-    "message": "[http://localhost:1337/:15] TypeError: console.xxxx is not a function"
+    "message": "[http://localhost:1337/:16] TypeError: console.xxxx is not a function"
 }
 ```
 
@@ -77,6 +77,21 @@ Your server needs to handle `POST` requests on the server URL and exploit the lo
 
 * Default value: `true`
 * Description: activation flag for logging JavaScript errors (`window.onerror`)
+
+## Bonus
+
+Optionally insert [stacktrace.js](https://github.com/stacktracejs/stacktrace.js) and you will get stack traces for errors:
+
+```
+{
+    "level": "warn",
+    "message": "Writes a warning log in the JS console and sends it to the server, Error: Oops!",
+    "stackTrace": "{anonymous}()@http://localhost:1337/:15"
+}
+```
+
+It works better in browsers that fully support the HTML 5 draft spec for [ErrorEvent](http://www.w3.org/html/wg/drafts/html/master/webappapis.html#the-errorevent-interface)
+and [window.onerror](http://www.w3.org/html/wg/drafts/html/master/webappapis.html#onerroreventhandler):
 
 ## Development
 

@@ -155,6 +155,93 @@ describe("console.js", function () {
 
     });
 
+    describe("addStackTrace", function () {
+
+        it("returns the given data", function () {
+            // When
+            var data = {level: "info", message: "message"},
+                returns = console.addStackTrace(data);
+
+            // Then
+            expect(returns).toBe(data);
+        });
+
+        it("does not add stack trace when stacktrace.js is not installed", function () {
+            // Given
+            var printStackTrace = window.printStackTrace,
+                data = {level: "info", message: "message", stackTrace: ""};
+            window.printStackTrace = null;
+
+            // When
+            console.addStackTrace(data);
+
+            // Then
+            expect(data.stackTrace).toBeUndefined();
+            window.printStackTrace = printStackTrace;
+        });
+
+        it("does not add stack trace when no error is given", function () {
+            // Given
+            var data = {level: "info", message: "message", stackTrace: ""};
+
+            // When
+            console.addStackTrace(data);
+
+            // Then
+            expect(data.stackTrace).toBeUndefined();
+        });
+
+        it("does not add stack trace when the given error is not an Error", function () {
+            // Given
+            var data = {level: "info", message: "message", stackTrace: ""};
+
+            // When
+            console.addStackTrace(data, "Oops!");
+
+            // Then
+            expect(data.stackTrace).toBeUndefined();
+        });
+
+        it("adds the error stack trace when stacktrace.js is installed", function () {
+            // Given
+            var error = new Error("Oops!"),
+                data = {level: "info", message: "message"};
+            spyOn(window, "printStackTrace").and.callThrough();
+
+            // When
+            console.addStackTrace(data, error);
+
+            // Then
+            // TODO Waiting for https://github.com/stacktracejs/stacktrace.js/issues/73 to be fixed
+            //expect(data.stackTrace).toBeTruthy();
+            expect(window.printStackTrace).toHaveBeenCalledWith({e: error});
+        });
+
+        it("transforms the stack trace into a multi-line string", function () {
+            // Given
+            var data = {level: "info", message: "message"};
+            spyOn(window, "printStackTrace").and.returnValue(["Oops1", "Oops2"]);
+
+            // When
+            console.addStackTrace(data, new Error("Oops!"));
+
+            // Then
+            expect(data.stackTrace).toBe("Oops1\nOops2");
+        });
+
+        it("does not break in case of stacktrace.js error", function () {
+            // Given
+            var data = {level: "info", message: "message", stackTrace: ""};
+            spyOn(window, "printStackTrace").and.throwError();
+
+            // When
+            console.addStackTrace(data);
+
+            // Then
+            expect(data.stackTrace).toBeUndefined();
+        });
+    });
+
     describe("proxyConsoleFunctions", function () {
 
         it("is chainable", function () {
@@ -227,16 +314,17 @@ describe("console.js", function () {
 
             it("call and return the result of the original function", function () {
                 // Given
+                var error = new Error("Oops");
                 spyOn(console, "warn").and.returnValue("warn");
                 console.readConfig(config)
                     .proxyConsoleFunctions();
 
                 // When
-                var returns = console.warn("Message", "[1]");
+                var returns = console.warn("Message1", "Message2", error);
 
                 // Then
                 expect(returns).toEqual("warn");
-                expect(console.original.warn).toHaveBeenCalledWith("Message, [1]");
+                expect(console.original.warn).toHaveBeenCalledWith("Message1", "Message2", error);
             });
 
             it("call the 'send' function", function () {
@@ -246,17 +334,37 @@ describe("console.js", function () {
                 spyOn(console, "send").and.stub();
 
                 // When
-                console.warn("Message", "[2]");
+                console.warn("Message");
 
                 // Then
-                expect(console.send).toHaveBeenCalledWith("warn", "Message, [2]");
+                expect(console.send).toHaveBeenCalledWith({level: "warn", message: "Message"});
+            });
+
+            it("adds a stack trace when an error is given in the arguments", function () {
+                // Given
+                var error = new Error("Oops!");
+                console.readConfig(config)
+                    .proxyConsoleFunctions();
+                spyOn(console, "send").and.stub();
+                spyOn(console, "addStackTrace").and.callFake(function (data, e) {
+                    if (e === error) {
+                        data.stackTrace = "Oops!";
+                    }
+                    return data;
+                });
+
+                // When
+                console.warn("Message1", "Message2", error);
+
+                // Then
+                expect(console.send).toHaveBeenCalledWith({level: "warn", message: "Message1, Message2, Error: Oops!", stackTrace: "Oops!"});
             });
 
             it("do not break on error", function () {
                 // Given
                 console.readConfig(config)
                     .proxyConsoleFunctions();
-                spyOn(console.original, "error").and.throwError("error");
+                spyOn(console.original, "error").and.throwError();
 
                 // When
                 console.error("Message");
@@ -306,15 +414,23 @@ describe("console.js", function () {
 
         it("'window.onerror' handler sends error details to the server", function () {
             // Given
-            spyOn(console, "send");
             console.readConfig(config)
                 .handleJavaScriptErrorsLogging();
+            spyOn(console, "addStackTrace").and.callFake(function (data) {
+                data.stackTrace = "stackTrace";
+                return data;
+            });
+            spyOn(console, "send");
 
             // When
             window.onerror("message", "fileName", "lineNumber", "columnNumber", "error");
 
             // Then
-            expect(console.send).toHaveBeenCalledWith("error", "[fileName:lineNumber:columnNumber] message (error)");
+            expect(console.send).toHaveBeenCalledWith({
+                level: "error",
+                message: "[fileName:lineNumber:columnNumber] message",
+                stackTrace: "stackTrace"
+            });
         });
 
         it("does not create a 'window.onerror' handler when 'logJavaScriptErrors' is false", function () {
@@ -370,7 +486,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .send("info", "message");
+                .send({level: "info", message: "message"});
 
             // Then
             expect(console.createHttp).not.toHaveBeenCalled();
@@ -382,19 +498,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .send("fatal", "message");
-
-            // Then
-            expect(console.createHttp).not.toHaveBeenCalled();
-        });
-
-        it("does not send if there is no message", function () {
-            // Given
-            spyOn(console, "createHttp");
-
-            // When
-            console.readConfig(config)
-                .send("info", "");
+                .send({level: "fatal", message: "message"});
 
             // Then
             expect(console.createHttp).not.toHaveBeenCalled();
@@ -407,7 +511,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .send("info", "message");
+                .send({level: "info", message: "message"});
 
             // Then
             expect(console.createHttp).not.toHaveBeenCalled();
@@ -421,7 +525,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .send("warn", "messageWarn");
+                .send({level: "warn", message: "messageWarn"});
 
             // Then
             expect(console.createHttp).toHaveBeenCalled();
@@ -438,7 +542,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .send("error", "messageError");
+                .send({level: "error", message: "messageError"});
 
             // Then
             expect(console.createHttp).toHaveBeenCalled();
@@ -455,7 +559,7 @@ describe("console.js", function () {
 
             // When
             console.readConfig(config)
-                .send("error", "messageError");
+                .send({level: "error", message: "messageError"});
         });
     });
 
@@ -569,7 +673,7 @@ describe("console.js", function () {
             console.restore();
 
             // Then
-            expect(console.config).toBe(undefined);
+            expect(console.config).toBeUndefined();
         });
 
         it("keeps functions needed for re-initiating the console", function () {
