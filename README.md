@@ -91,7 +91,7 @@ Optionally insert [stacktrace.js](https://github.com/stacktracejs/stacktrace.js)
 ```
 
 It works better in browsers that fully support the HTML 5 draft spec for [ErrorEvent](http://www.w3.org/html/wg/drafts/html/master/webappapis.html#the-errorevent-interface)
-and [window.onerror](http://www.w3.org/html/wg/drafts/html/master/webappapis.html#onerroreventhandler):
+and [window.onerror](http://www.w3.org/html/wg/drafts/html/master/webappapis.html#onerroreventhandler).
 
 ## Development
 
