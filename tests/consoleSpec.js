@@ -212,8 +212,7 @@ describe("console.js", function () {
             console.addStackTrace(data, error);
 
             // Then
-            // TODO Waiting for https://github.com/stacktracejs/stacktrace.js/issues/73 to be fixed
-            //expect(data.stackTrace).toBeTruthy();
+            expect(data.stackTrace).toBeTruthy();
             expect(window.printStackTrace).toHaveBeenCalledWith({e: error});
         });
 
