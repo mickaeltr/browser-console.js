@@ -168,12 +168,14 @@ describe("console.js", function () {
 
         it("does not add stack trace when stacktrace.js is not installed", function () {
             // Given
-            var printStackTrace = window.printStackTrace,
-                data = {level: "info", message: "message", stackTrace: ""};
+            var error = Error("Oops!"),
+                data = {level: "info", message: "message", stackTrace: ""},
+                printStackTrace = window.printStackTrace;
+            error.stack = "line1\nline2";
             window.printStackTrace = null;
 
             // When
-            console.addStackTrace(data);
+            console.addStackTrace(data, error);
 
             // Then
             expect(data.stackTrace).toBeUndefined();
@@ -204,8 +206,9 @@ describe("console.js", function () {
 
         it("adds the error stack trace when stacktrace.js is installed", function () {
             // Given
-            var error = new Error("Oops!"),
+            var error = Error("Oops!"),
                 data = {level: "info", message: "message"};
+            error.stack = "line1\nline2";
             spyOn(window, "printStackTrace").and.callThrough();
 
             // When
@@ -222,7 +225,7 @@ describe("console.js", function () {
             spyOn(window, "printStackTrace").and.returnValue(["Oops1", "Oops2"]);
 
             // When
-            console.addStackTrace(data, new Error("Oops!"));
+            console.addStackTrace(data, Error("Oops!"));
 
             // Then
             expect(data.stackTrace).toBe("Oops1\nOops2");
@@ -313,7 +316,7 @@ describe("console.js", function () {
 
             it("call and return the result of the original function", function () {
                 // Given
-                var error = new Error("Oops");
+                var error = Error("Oops");
                 spyOn(console, "warn").and.returnValue("warn");
                 console.readConfig(config)
                     .proxyConsoleFunctions();
@@ -341,7 +344,7 @@ describe("console.js", function () {
 
             it("adds a stack trace when an error is given in the arguments", function () {
                 // Given
-                var error = new Error("Oops!");
+                var error = Error("Oops!");
                 console.readConfig(config)
                     .proxyConsoleFunctions();
                 spyOn(console, "send").and.stub();
@@ -557,8 +560,11 @@ describe("console.js", function () {
             config.levelEnabledOnServer = "warn";
 
             // When
-            console.readConfig(config)
+            var returns = console.readConfig(config)
                 .send({level: "error", message: "messageError"});
+
+            // Then
+            expect(returns).toBe(console);
         });
     });
 

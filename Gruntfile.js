@@ -15,7 +15,7 @@ module.exports = function (grunt) {
                 outfile: ".grunt/SpecRunner.html",
                 specs: tests,
                 vendor: [
-                    "http://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/0.6.2/stacktrace.js",
+                    "http://cdnjs.cloudflare.com/ajax/libs/stacktrace.js/0.6.4/stacktrace.js",
                     "http://localhost:35729/livereload.js"
                 ]
             },
