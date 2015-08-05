@@ -1,6 +1,6 @@
 {
   "name": "console.js",
-  "version": "0.2.0",
+  "version": "0.333",
   "license": "Apache-2.0",
   "main": "lib/console.js",
   "devDependencies": {
