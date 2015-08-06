@@ -369,7 +369,12 @@ describe("console.js", function () {
                 spyOn(console.original, "error").and.throwError();
 
                 // When
-                console.error("Message");
+                var onError = function() {
+                    console.error("Message")
+                };
+
+                // Then
+                expect(onError).not.toThrow();
             });
 
         });
