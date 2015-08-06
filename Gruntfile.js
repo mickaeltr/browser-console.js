@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
     "use strict";
 
-    var source = "lib/console.js",
+    var source = "lib/browser-console.js",
         tests = "tests/*.js",
         config = {};
 
@@ -27,11 +27,11 @@ module.exports = function (grunt) {
     config.uglify = {
         console: {
             files: {
-                "lib/console.min.js": source
+                "lib/browser-console.min.js": source
             },
             options: {
                 sourceMap: true,
-                sourceMapName: "lib/console.min.js.map"
+                sourceMapName: "lib/browser-console.min.js.map"
             }
         }
     };

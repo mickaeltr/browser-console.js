@@ -16,8 +16,8 @@
         res.sendfile("index.html");
     });
 
-    app.get("/lib/console.js", function (req, res) {
-        res.sendfile(path.resolve("../lib/console.js"));
+    app.get("/lib/browser-console.js", function (req, res) {
+        res.sendfile(path.resolve("../lib/browser-console.js"));
     });
 
     app.post("/logs", function (req, res) {

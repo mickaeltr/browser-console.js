@@ -1,6 +1,6 @@
-# console.js [![Build Status](https://travis-ci.org/mickaeltr/console.js.svg?branch=master)](https://travis-ci.org/mickaeltr/console.js)
+# browser-console.js [![Build Status](https://travis-ci.org/mickaeltr/browser-console.js.svg?branch=master)](https://travis-ci.org/mickaeltr/browser-console.js)
 
-JavaScript console that sends logs and unexpected errors to a remote server.
+JavaScript console that sends logs and unexpected browser errors to a remote server.
 
 ## Why?
 
@@ -8,15 +8,15 @@ You have plenty of logs for your server-side applications but you do not know mu
 
 ## Usage
 
-Insert [console.js](https://github.com/mickaeltr/console.js), initialize the console and play with it:
+Insert [browser-console.js](https://github.com/mickaeltr/browser-console.js), initialize the console and play with it:
 
 ```html
-<script src="lib/console.js"></script>
+<script src="lib/browser-console.js"></script>
 <script>
     console.init({
         serverUrl: "/logs"
     });
-    console.warn("Writes a warning log in the JS console and sends it to the server", new Error("Oops"));
+    console.warn("Writes a warning log in the browser console and sends it to the server", new Error("Oops"));
     console.xxxx("Sends an unexpected JS error to the server, as there is no 'xxxx' level/method");
 </script>
 ```
@@ -26,7 +26,7 @@ The following requests will be sent (`POST`) to the server URL (`/logs`):
 ```json
 {
     "level": "warn",
-    "message": "Writes a warning log in the JS console and sends it to the server, Error: Oops!"
+    "message": "Writes a warning log in the browser console and sends it to the server, Error: Oops!"
 }
 ```
 
@@ -44,7 +44,7 @@ Referer: http://localhost:1337/
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:28.0) Gecko/20100101 Firefox/28.0
 ```
 
-Your server needs to handle `POST` requests on the server URL and exploit the logs. See a node.js example at `server/server.js`.
+Your server needs to handle `POST` requests on the server URL and exploit the logs. See a Node.js example at `server/server.js`.
 
 ## Configuration
 
@@ -85,7 +85,7 @@ Optionally insert [stacktrace.js](https://github.com/stacktracejs/stacktrace.js)
 ```json
 {
     "level": "warn",
-    "message": "Writes a warning log in the JS console and sends it to the server, Error: Oops!",
+    "message": "Writes a warning log in the browser console and sends it to the server, Error: Oops!",
     "stackTrace": "{anonymous}()@http://localhost:1337/:15"
 }
 ```
@@ -102,7 +102,7 @@ and [window.onerror](http://www.w3.org/html/wg/drafts/html/master/webappapis.htm
 
 ### Run unit tests
 
-#### In the console
+#### In the terminal
 
 ```bash
 grunt jasmine

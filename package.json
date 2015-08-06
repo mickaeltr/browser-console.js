@@ -1,8 +1,8 @@
 {
-  "name": "console.js",
+  "name": "browser-console.js",
   "version": "0.3.0",
   "license": "Apache-2.0",
-  "main": "lib/console.js",
+  "main": "lib/browser-console.js",
   "devDependencies": {
     "express": "4.13.3",
     "grunt": "0.4.5",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:mickaeltr/console.js.git"
+    "url": "git@github.com:mickaeltr/browser-console.js.git"
   },
   "scripts": {
     "test": "grunt clean jasmine"
