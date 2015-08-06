@@ -1,5 +1,13 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.12'
 before_script:
-  - npm install -g grunt-cli
+- npm install -g grunt-cli
+deploy:
+  provider: npm
+  email: mickaeltr+npm@gmail.com
+  api_key:
+    secure: SCRRe/Of4FS8qvyMLfPLlkqAJQhp24yKyc3bRSTOCCgOEdmbIpcRhSYFj37q3EYT9N0vW8oBvL6TCX9fFa0pc05kRVE2Y8xCF5D+SMD6H6/XrjVKdOlzxllGDfwDgwY1ff5UwfT2Jh07WLzdVOgM8kUjResCCIs25R8DHgLqg+c=
+  on:
+    tags: true
+    repo: mickaeltr/browser-console.js

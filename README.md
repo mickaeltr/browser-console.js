@@ -97,7 +97,7 @@ and [window.onerror](http://www.w3.org/html/wg/drafts/html/master/webappapis.htm
 
 ### Prerequisites
 
-* [node.js](http://nodejs.org/)
+* [Node.js](http://nodejs.org/)
 * [Grunt](http://gruntjs.com/)
 
 ### Run unit tests
